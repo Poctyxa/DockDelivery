@@ -2,6 +2,7 @@
 using DockDelivery.Domain.Entities;
 using DockDelivery.Domain.Repositories.Abstract;
 using DockDelivery.Domain.UoW;
+using MongoDB.Bson;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -9,44 +10,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestDataLibrary;
 
 namespace DockDelivery.Test.Services
 {
     internal class CargoServiceTest
     {
-        private List<Cargo> CreateTestCargos()
-        {
-            return new List<Cargo>() 
-            { 
-                new Cargo() { 
-                    Id = Guid.NewGuid(),
-                    Description = "Cargo 1", 
-                    CargoSectionId = Guid.NewGuid(),
-                    Capacity = 500,
-                    Weight = 500
-                    },
-                new Cargo() {
-                    Id = Guid.NewGuid(),
-                    Description = "Cargo 2",
-                    CargoSectionId = Guid.NewGuid(),
-                    Capacity = 600,
-                    Weight = 600
-                    },
-                new Cargo() {
-                    Id = Guid.NewGuid(),
-                    Description = "Cargo 3",
-                    CargoSectionId = Guid.NewGuid(),
-                    Capacity = 700,
-                    Weight = 700
-                    }
-            };
-        }
-
         [Test]
         public async Task GetCargosAsync_ShouldReturnCargosList()
         {
             // Arrange
-            var cargos = CreateTestCargos();
+            var cargos = DataCreator.CreateTestCargos();
 
             var cargoReposMoq = new Mock<ICargoRepository>();
             cargoReposMoq.Setup(rep => rep.GetAllAsync()).ReturnsAsync(cargos);
@@ -70,7 +44,7 @@ namespace DockDelivery.Test.Services
         public async Task GetCargoByIdAsync_ShouldReturnSingleCargo()
         {
             // Arrange
-            var cargos = CreateTestCargos();
+            var cargos = DataCreator.CreateTestCargos();
             var cargoId = cargos[1].Id;
 
             var cargoReposMoq = new Mock<ICargoRepository>();
@@ -93,7 +67,7 @@ namespace DockDelivery.Test.Services
         public async Task UpdateCargoAsync_ShouldReturnUpdatedCargo()
         {
             // Arrange
-            List<Cargo> cargos = CreateTestCargos();
+            List<Cargo> cargos = DataCreator.CreateTestCargos();
             string testOwner = "Vasil";
             string testDescription = "SuperCargo";
 
@@ -146,7 +120,7 @@ namespace DockDelivery.Test.Services
 
             // Assert
             Assert.NotNull(cargoResult);
-            Assert.IsTrue(cargoResult.Id != Guid.Empty);
+            Assert.IsTrue(cargoResult.Id.Length > 0);
             Assert.AreEqual(testDescription, cargoResult.Description);
             Assert.AreEqual(testOwner, cargoResult.Owner);
             Assert.AreEqual(testCapacity, cargoResult.Capacity);
@@ -157,7 +131,7 @@ namespace DockDelivery.Test.Services
         public async Task RemoveCargoAsync_ShouldReturnRemovedCargo()
         {
             // Arrange
-            Guid testId = Guid.NewGuid();
+            string testId = ObjectId.GenerateNewId().ToString();
             string testOwner = "Vasil";
             string testDescription = "SuperCargo";
             double testCapacity = 500;

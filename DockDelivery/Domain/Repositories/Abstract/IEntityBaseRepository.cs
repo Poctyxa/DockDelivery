@@ -9,9 +9,9 @@ namespace DockDelivery.Domain.Repositories.Abstract
     {
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> expression);
-        Task<TEntity> GetByIdAsync(Guid entityId);
+        Task<TEntity> GetByIdAsync(string entityId);
         Task<TEntity> CreateAsync(TEntity entity);
-        Task<TEntity> RemoveAsync(Guid entityId);
+        Task<TEntity> RemoveAsync(string entityId);
         Task<bool> RemoveRangeAsync(IEnumerable<TEntity> entities);
         Task<TEntity> UpdateAsync(TEntity entity);
     }

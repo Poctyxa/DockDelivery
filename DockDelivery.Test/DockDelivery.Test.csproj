@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DockDelivery\DockDelivery.csproj" />
+    <ProjectReference Include="..\TestDataLibrary\TestDataLibrary.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@
 using DockDelivery.Domain.Entities;
 using DockDelivery.Domain.Repositories.Abstract;
 using DockDelivery.Domain.UoW;
+using MongoDB.Bson;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -9,35 +10,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestDataLibrary;
 
 namespace DockDelivery.Test.Services
 {
     internal class CargoTypeServiceTest
     {
-        private List<CargoType> CreateTestCargoTypes()
-        {
-            return new List<CargoType>()
-            {
-                new CargoType() {
-                    Id = Guid.NewGuid(),
-                    TypeName = "CargoType 1"
-                    },
-                new CargoType() {
-                    Id = Guid.NewGuid(),
-                    TypeName = "CargoType 2"
-                    },
-                new CargoType() {
-                    Id = Guid.NewGuid(),
-                    TypeName = "CargoType 3"
-                    }
-            };
-        }
-
         [Test]
         public async Task GetCargoTypesAsync_ShouldReturnCargoTypesList()
         {
             // Arrange
-            var cargoTypes = CreateTestCargoTypes();
+            var cargoTypes = DataCreator.CreateTestCargoTypes();
 
             var cargoTypeReposMoq = new Mock<ICargoTypeRepository>();
             cargoTypeReposMoq.Setup(rep => rep.GetAllAsync()).ReturnsAsync(cargoTypes);
@@ -61,7 +44,7 @@ namespace DockDelivery.Test.Services
         public async Task GetCargoByIdAsync_ShouldReturnSingleCargo()
         {
             // Arrange
-            var cargoTypes = CreateTestCargoTypes();
+            var cargoTypes = DataCreator.CreateTestCargoTypes();
             var cargoTypeId = cargoTypes[1].Id;
 
             var cargoTypeReposMoq = new Mock<ICargoTypeRepository>();
@@ -84,7 +67,7 @@ namespace DockDelivery.Test.Services
         public async Task UpdateCargoTypeAsync_ShouldReturnUpdatedCargoType()
         {
             // Arrange
-            List<CargoType> cargoTypes = CreateTestCargoTypes();
+            List<CargoType> cargoTypes = DataCreator.CreateTestCargoTypes();
             string testName = "Test Cargo";
 
             CargoType expectedCargoType = cargoTypes[1];
@@ -129,7 +112,7 @@ namespace DockDelivery.Test.Services
 
             // Assert
             Assert.NotNull(cargoTypeResult);
-            Assert.IsTrue(cargoTypeResult.Id != Guid.Empty);
+            Assert.IsTrue(cargoTypeResult.Id.Length > 0);
             Assert.AreEqual(testTypeName, cargoTypeResult.TypeName);
         }
 
@@ -137,7 +120,7 @@ namespace DockDelivery.Test.Services
         public async Task RemoveCargoTypeAsync_ShouldReturnRemovedCargoType()
         {
             // Arrange
-            Guid testId = Guid.NewGuid();
+            string testId = ObjectId.GenerateNewId().ToString();
             string testTypeName = "test type name";
 
             CargoType expectedCargoType = new CargoType();

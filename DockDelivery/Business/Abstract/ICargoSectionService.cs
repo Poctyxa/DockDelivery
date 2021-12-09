@@ -8,9 +8,9 @@ namespace DockDelivery.Business.Abstract
     public interface ICargoSectionService
     {
         Task<IEnumerable<CargoSection>> GetCargoSectionsAsync();
-        Task<CargoSection> GetByIdAsync(Guid cargoSectionId);
+        Task<CargoSection> GetByIdAsync(string cargoSectionId);
         Task<CargoSection> CreateAsync(CargoSection cargoSection);
         Task<CargoSection> UpdateAsync(CargoSection cargoSection);
-        Task<CargoSection> RemoveAsync(Guid cargoSectionId);
+        Task<CargoSection> RemoveAsync(string cargoSectionId);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DockDelivery.Business.Abstract;
 using DockDelivery.Business.Service;
+using DockDelivery.Business.Service.Mongo;
 using DockDelivery.Domain.UoW;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,10 +14,10 @@ namespace DockDelivery.Configuration
             //    return new DepartmentService(service.GetService<IDockDeliveryUnitOfWork>());
             //});
 
-            services.AddTransient<IDepartmentService, DepartmentService>();
-            services.AddTransient<ICargoService, CargoService>();
-            services.AddTransient<ICargoTypeService, CargoTypeService>();
-            services.AddTransient<ICargoSectionService, CargoSectionService>();
+            services.AddTransient<IDepartmentService, MongoDepartmentService>();
+            services.AddTransient<ICargoService, MongoCargoService>();
+            services.AddTransient<ICargoTypeService, MongoCargoTypeService>();
+            services.AddTransient<ICargoSectionService, MongoCargoSectionService>();
         }
     }
 }

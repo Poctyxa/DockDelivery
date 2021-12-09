@@ -2,44 +2,24 @@
 using DockDelivery.Domain.Entities;
 using DockDelivery.Domain.Repositories.Abstract;
 using DockDelivery.Domain.UoW;
+using MongoDB.Bson;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TestDataLibrary;
 
 namespace DockDelivery.Test.Services
 {
     internal class DepartmentServiceTest
     {
-        private List<Department> CreateTestDepartments()
-        {
-            return new List<Department>()
-            {
-                new Department() {
-                    Id = Guid.NewGuid(),
-                    DepartmentName = "Department 1",
-                    DepartmentAddress = "Test address 1"
-                    },
-                new Department() {
-                    Id = Guid.NewGuid(),
-                    DepartmentName = "Department 2",
-                    DepartmentAddress = "Test address 2"
-                    },
-                new Department() {
-                    Id = Guid.NewGuid(),
-                    DepartmentName = "Department 3",
-                    DepartmentAddress = "Test address 3"
-                    }
-            };
-        }
-
         [Test]
         public async Task GetDepartmentsAsync_ShouldReturnDepartmentsList()
         {
             // Arrange
-            var departments = CreateTestDepartments();
+            var departments = DataCreator.CreateTestDepartments();
 
             var departmentReposMoq = new Mock<IDepartmentRepository>();
             departmentReposMoq.Setup(rep => rep.GetAllAsync()).ReturnsAsync(departments);
@@ -63,7 +43,7 @@ namespace DockDelivery.Test.Services
         public async Task GetDepartmentByIdAsync_ShouldReturnSingleDepartment()
         {
             // Arrange
-            var departments = CreateTestDepartments();
+            var departments = DataCreator.CreateTestDepartments();
             var departmentId = departments[1].Id;
 
             var departmentReposMoq = new Mock<IDepartmentRepository>();
@@ -86,7 +66,7 @@ namespace DockDelivery.Test.Services
         public async Task UpdateDepartmentAsync_ShouldReturnUpdatedDepartment()
         {
             // Arrange
-            List<Department> departments = CreateTestDepartments();
+            List<Department> departments = DataCreator.CreateTestDepartments();
             string testName = "Test department name";
             string testAddress = "Test department address";
 
@@ -135,7 +115,7 @@ namespace DockDelivery.Test.Services
 
             // Assert
             Assert.NotNull(departmentResult);
-            Assert.IsTrue(departmentResult.Id != Guid.Empty);
+            Assert.IsTrue(departmentResult.Id.Length > 0);
             Assert.AreEqual(testName, departmentResult.DepartmentName);
             Assert.AreEqual(testAddress, departmentResult.DepartmentAddress);
         }
@@ -144,7 +124,7 @@ namespace DockDelivery.Test.Services
         public async Task RemoveDepartmentAsync_ShouldReturnRemovedDepartment()
         {
             // Arrange
-            Guid testId = Guid.NewGuid();
+            string testId = ObjectId.GenerateNewId().ToString();
             string testName = "Test department name";
             string testAddress = "Test department address";
 

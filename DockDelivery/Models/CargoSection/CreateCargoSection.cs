@@ -6,10 +6,10 @@ namespace DockDelivery.Models.CargoSection
     public class CreateCargoSection
     {
         [Required]
-        public Guid CargoTypeId { get; set; }
+        public string CargoTypeId { get; set; }
 
         [Required]
-        public Guid DepartmentId { get; set; }
+        public string DepartmentId { get; set; }
 
         [Required]
         public double CapacityLimit { get; set; }

@@ -6,7 +6,7 @@ namespace DockDelivery.Models.Cargo
     public class CreateCargo
     {
         [Required]
-        public Guid CargoSectionId { get; set; }
+        public string CargoSectionId { get; set; }
 
         [Required]
         public string Description { get; set; }

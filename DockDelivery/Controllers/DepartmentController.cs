@@ -2,6 +2,8 @@
 using DockDelivery.Domain.Entities;
 using DockDelivery.Models.Department;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Protocols;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,7 +31,7 @@ namespace DockDelivery.Controllers
 
         [HttpGet]
         [Route("{departmentId}")]
-        public IActionResult Read(Guid departmentId)
+        public IActionResult Read(string departmentId)
         {
             var department = departmentService.GetByIdAsync(departmentId).Result;
             return Ok(department);
@@ -42,10 +44,12 @@ namespace DockDelivery.Controllers
                 var newDepartment = new Department();
                 newDepartment.DepartmentName = department.DepartmentName;
                 newDepartment.DepartmentAddress = department.DepartmentAddress;
+                newDepartment.LastSending = department.LastSending;
+                newDepartment.NextSending = department.NextSending;
 
                 await departmentService.CreateAsync(newDepartment);
             
-                if (newDepartment.Id != Guid.Empty)
+                if (newDepartment.Id.Length > 0)
                 return Ok("Department was added");
             }
 
@@ -64,10 +68,9 @@ namespace DockDelivery.Controllers
             return BadRequest("Department was not updated");
         }
 
-
         [HttpDelete]
         [Route("{departmentId}")]
-        public async Task<IActionResult> Remove(Guid departmentId)
+        public async Task<IActionResult> Remove(string departmentId)
         {
             if (ModelState.IsValid)
             {
@@ -78,13 +81,16 @@ namespace DockDelivery.Controllers
             return BadRequest("Department was not removed");
         }
 
-        [HttpGet]
-        [Route("assignDepart/{departmentId}")]
-        public async Task<IActionResult> AssignDepart(Guid departmentId)
+        [HttpPost]
+        [Route("assignDepart")]
+        public async Task<IActionResult> AssignDepart([FromBody] AssignDepartModel departmentInfo)
         {
+            if (!ModelState.IsValid)
+                return BadRequest("Model was not valid");
+
             try
             {
-                Department department = await departmentService.GetByIdAsync(departmentId);
+                Department department = await departmentService.GetByIdAsync(departmentInfo.DepartmentId);
 
                 // some date VALIDATION
                 if (department.NextSending == null)
@@ -118,10 +124,10 @@ namespace DockDelivery.Controllers
         }
 
         [HttpGet]
-        [Route("capable/dl={dateLimit}&s={cargoTypeId}&w={weight}&c={capacity}")]
+        [Route("capable/dl={dateLimit}&w={weight}&c={capacity}&t={cargoTypeId}")]
         public async Task<IActionResult> GetCapableDepartments(
-            DateTime dateLimit, 
-            Guid cargoTypeId,
+            DateTime dateLimit,
+            string cargoTypeId,
             double weight, 
             double capacity)
         {

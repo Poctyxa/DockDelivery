@@ -12,6 +12,7 @@ using System;
 using System.Reflection;
 
 [assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("DockDelivery, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", "C:\\Users\\rostyslav.dmytriv\\source\\repos\\DockDelivery\\DockDelivery", "DockDelivery.csproj", "0")]
+[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("TestDataLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", "C:\\Users\\rostyslav.dmytriv\\source\\repos\\DockDelivery\\TestDataLibrary", "TestDataLibrary.csproj", "0")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("DockDelivery.Test")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]

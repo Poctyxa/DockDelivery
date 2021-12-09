@@ -26,7 +26,7 @@ namespace DockDelivery.Controllers
 
         [HttpGet]
         [Route("{cargoTypeId}")]
-        public IActionResult Read(Guid cargoTypeId)
+        public IActionResult Read(string cargoTypeId)
         {
             var cargoType = cargoTypeService.GetByIdAsync(cargoTypeId).Result;
             return Ok(cargoType);
@@ -42,7 +42,7 @@ namespace DockDelivery.Controllers
 
                 await cargoTypeService.CreateAsync(newCargoType);
 
-                if (newCargoType.Id != Guid.Empty)
+                if (newCargoType.Id.Length > 0)
                     return Ok("CargoSection was added");
             }
 
@@ -64,7 +64,7 @@ namespace DockDelivery.Controllers
 
         [HttpDelete]
         [Route("{cargoTypeId}")]
-        public async Task<IActionResult> Remove(Guid cargoTypeId)
+        public async Task<IActionResult> Remove(string cargoTypeId)
         {
             if (ModelState.IsValid)
             {
